@@ -69,6 +69,45 @@ design-ai-digest/
     └── workflows/
         └── weekly-digest.yml
 
+## Two Tasks — Complete in This Order
+
+### Task 1 — Update index.html to fetch from Supabase dynamically
+The current index.html has hardcoded placeholder content.
+Rewrite it so all content loads from Supabase at page load.
+Keep the exact same visual layout — only the data source changes.
+Full spec is in the "TASK 1" section above.
+
+### Task 2 — Build the autonomous weekly pipeline
+Create all pipeline scripts and the GitHub Actions workflow
+so new issues are published automatically every week.
+Full spec is in the "TASK 2" section above.
+
+Complete Task 1 fully before starting Task 2.
+Do not start Task 2 until Task 1 is confirmed working.
+
+
+## Database Schema
+
+Table: `public."DDD_Database"` (Supabase)
+
+| Column         | Type      | Notes                              |
+|----------------|-----------|------------------------------------|
+| `id`           | uuid      | Primary key, auto gen_random_uuid()|
+| `created_at`   | timestamptz | Auto now()                       |
+| `issue`        | integer   | Digest issue number                |
+| `section`      | text      | Section the item belongs to        |
+| `content_type` | text      | Defaults to `'article'`            |
+| `title`        | text      |                                    |
+| `url`          | text      | Required (not null)                |
+| `summary`      | text      |                                    |
+| `thumbnail_url`| text      |                                    |
+| `tags`         | text      |                                    |
+| `source_name`  | text      |                                    |
+| `position`     | integer   | Order within section, defaults to 0|
+| `insight_1`    | text      | Hero items only                    |
+| `insight_2`    | text      | Hero items only                    |
+| `insight_3`    | text      | Hero items only                    |
+
 ### Never do these
 - No frameworks (no React, Vue, Svelte)
 - No build step or package.json for index.html
