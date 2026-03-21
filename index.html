@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design & AI Digest</title>
+
+  <!-- Tailwind CSS CDN — no build step needed -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts: Space Grotesk + IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <script>
+    // ─── Tailwind Config ─────────────────────────────────────────────────────
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            mono:    ['"IBM Plex Mono"', 'monospace'],
+          },
+          colors: {
+            lime:    '#cafd00',   // large date / accent green
+            cream:   '#f3ffca',   // labels / borders / button
+            dark:    '#0e0e0e',   // page background
+            panel:   '#131313',   // article card background
+            raised:  '#1f1f1f',   // inset card background
+            mid:     '#262626',   // image card background
+            muted:   '#757575',   // secondary text
+            dim:     '#ababab',   // body text
+            border:  'rgba(72,72,72,0.4)',
+          },
+          letterSpacing: {
+            tightest: '-0.05em',
+            wide: '0.1em',
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ── Base reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: #0e0e0e; color: #fff; font-family: 'IBM Plex Mono', monospace; }
+
+    /* ── Grid overlay (subtle) ──────────────────────────────────────── */
+    .grid-overlay {
+      background-image:
+        linear-gradient(90deg, rgba(243,255,202,0.025) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(243,255,202,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    /* ── Grayscale image effect ─────────────────────────────────────── */
+    .img-gray { filter: grayscale(100%) contrast(1.05); transition: filter 0.4s ease; }
+    .img-gray:hover { filter: grayscale(0%) contrast(1); }
+
+    /* ── Scrollbar ──────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0e0e0e; }
+    ::-webkit-scrollbar-thumb { background: rgba(243,255,202,0.2); }
+
+    /* ── Right sidebar scrollable ───────────────────────────────────── */
+    .sidebar-scroll { overflow-y: auto; max-height: calc(100vh - 65px); }
+    .sidebar-scroll::-webkit-scrollbar { width: 2px; }
+
+    /* ── Hover states ───────────────────────────────────────────────── */
+    .article-card { transition: border-color 0.2s ease; }
+    .article-card:hover { border-color: rgba(243,255,202,0.25) !important; }
+    .read-link { transition: color 0.2s ease; }
+    .read-link:hover { color: #cafd00; }
+
+    /* ── Timeline chip active ───────────────────────────────────────── */
+    .chip-active  { background: #f3ffca; color: #516700; }
+    .chip-inactive { background: #1f1f1f; color: #fff; border: 1px solid rgba(72,72,72,0.4); }
+    .chip-inactive .chip-month { color: #757575; }
+
+    /* ── Sticky header ──────────────────────────────────────────────── */
+    header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(8px); }
+
+    /* ─────────────────────────────────────────────────────────────────
+       HOW TO EDIT CONTENT  (Manual Mode)
+       ─────────────────────────────────────────────────────────────────
+       All editable content is wrapped in data attributes you can
+       search for in VS Code. Ctrl+F the section name, e.g.:
+         data-section="hero"
+         data-section="insights"
+         data-section="spotlight"
+         data-section="visual-inspo"
+         data-section="sidebar-thumbs"
+
+       IMAGES — Use direct media URLs, not page URLs:
+         ✅  https://cdn.example.com/image.jpg
+         ✅  https://api.microlink.io/?url=PAGE_URL&screenshot=true&meta=false&embed=screenshot.url
+         ❌  https://www.somewebsite.com/article (this is a page, not an image)
+
+       MICROLINK — To auto-extract OG image from any article URL, use:
+         https://api.microlink.io/?url=YOUR_ARTICLE_URL&screenshot=true&meta=false&embed=screenshot.url
+         Replace YOUR_ARTICLE_URL with the encoded article URL.
+    ──────────────────────────────────────────────────────────────────── -->
+  </style>
+</head>
+
+<body class="bg-dark min-h-screen">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════════════════════════════ -->
+<header class="bg-dark/90 border-b border-border px-6 py-4 flex items-center justify-between">
+  <span class="font-display font-bold text-cream text-2xl uppercase tracking-tightest">
+    Design &times; AI Digest
+  </span>
+  <div class="flex items-center gap-4">
+    <!-- ── EDIT: Update issue number and date each week ── -->
+    <span class="font-mono text-muted text-[10px] uppercase tracking-wide">Issue #001</span>
+    <span class="font-mono text-cream text-[10px] uppercase tracking-wide border border-border px-3 py-1">Weekly</span>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     MAIN LAYOUT  (Left sidebar | Center content | Right sidebar)
+════════════════════════════════════════════════════════════════════════ -->
+<div class="grid-overlay flex min-h-screen">
+
+  <!-- ══ LEFT SIDEBAR ══════════════════════════════════════════════════ -->
+  <aside class="w-[220px] shrink-0 bg-panel border-r border-border flex flex-col px-8 py-8 sticky top-[65px] self-start h-[calc(100vh-65px)]">
+
+    <!-- DATE — EDIT: update DD / MON each issue -->
+    <div class="mt-auto">
+      <div data-section="date" class="font-display font-bold text-lime leading-none uppercase" style="font-size:88px; letter-spacing:-4px; line-height:0.85;">
+        <!-- ── EDIT: Change day number ── -->
+        24<br>MAR
+      </div>
+
+      <div class="border-t-2 border-cream mt-8 pt-4 flex items-baseline justify-between">
+        <!-- ── EDIT: Update year ── -->
+        <span class="font-display font-light text-white text-2xl">2025</span>
+        <span class="font-mono text-muted text-2xl">AI_UX</span>
+      </div>
+    </div>
+
+    <!-- APPS USED — EDIT: list tools/apps featured this issue -->
+    <div class="mt-10 bg-raised border border-border p-4 flex flex-col gap-1">
+      <span class="font-mono text-muted text-[10px] uppercase tracking-wide">Tools Featured</span>
+      <div data-section="tools" class="font-display font-normal text-cream text-lg uppercase leading-6 mt-1">
+        <!-- ── EDIT: one tool per line ── -->
+        Figma<br>
+        Cursor<br>
+        v0
+      </div>
+    </div>
+
+    <!-- TIMELINE INDEX — EDIT: update dates, active = current issue -->
+    <div class="mt-10 border-t border-border pt-6">
+      <span class="font-mono text-muted text-[10px] uppercase tracking-[1px] block mb-4">Timeline Index</span>
+      <div data-section="timeline" class="flex flex-wrap gap-2">
+        <!-- Active chip -->
+        <div class="chip-active flex flex-col items-center justify-center w-12 h-12 text-center">
+          <span class="font-mono font-bold text-[10px]">24</span>
+          <span class="font-mono text-[8px] uppercase">MAR</span>
+        </div>
+        <!-- Past chips — EDIT: add one chip per past issue -->
+        <div class="chip-inactive flex flex-col items-center justify-center w-12 h-12 text-center">
+          <span class="font-mono text-[10px]">17</span>
+          <span class="chip-month font-mono text-[8px] uppercase">MAR</span>
+        </div>
+        <div class="chip-inactive flex flex-col items-center justify-center w-12 h-12 text-center">
+          <span class="font-mono text-[10px]">10</span>
+          <span class="chip-month font-mono text-[8px] uppercase">MAR</span>
+        </div>
+        <div class="chip-inactive flex flex-col items-center justify-center w-12 h-12 text-center">
+          <span class="font-mono text-[10px]">03</span>
+          <span class="chip-month font-mono text-[8px] uppercase">MAR</span>
+        </div>
+        <!-- Arrow chip -->
+        <div class="flex items-center justify-center w-12 h-12 border border-border text-muted font-mono text-xs">→</div>
+      </div>
+    </div>
+
+  </aside><!-- /LEFT SIDEBAR -->
+
+  <!-- ══ CENTER CONTENT ════════════════════════════════════════════════ -->
+  <main class="flex-1 border-r border-border px-12 py-12 flex flex-col gap-16">
+
+    <!-- ── HERO ARTICLE ─────────────────────────────────────────────── -->
+    <section data-section="hero">
+
+      <!-- Hero image card -->
+      <div class="bg-mid border border-border p-px mb-8 relative">
+        <!-- ── EDIT: replace src with direct image URL or Microlink URL ── -->
+        <!-- Microlink example: https://api.microlink.io/?url=ARTICLE_URL&screenshot=true&meta=false&embed=screenshot.url -->
+        <img
+          src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80"
+          alt="Hero article thumbnail"
+          class="img-gray w-full h-[320px] object-cover block"
+        />
+        <!-- Image label -->
+        <span class="absolute bottom-3 left-3 bg-cream text-[#516700] font-mono font-bold text-[8px] px-1 py-0.5">01_HERO</span>
+        <!-- Border accent -->
+        <div class="absolute inset-0 border-2 border-cream pointer-events-none"></div>
+      </div>
+
+      <!-- Tags -->
+      <div class="flex gap-2 mb-6">
+        <!-- ── EDIT: update category tags ── -->
+        <span class="font-mono text-cream text-[10px] uppercase border border-cream/40 px-3 py-1">UX/AI Design</span>
+        <span class="font-mono text-muted text-[10px] uppercase border border-border px-3 py-1">Sourced</span>
+      </div>
+
+      <!-- Headline -->
+      <!-- ── EDIT: paste article headline here ── -->
+      <h1 class="font-display font-bold text-white uppercase leading-none tracking-tightest mb-6" style="font-size:clamp(48px,5vw,72px); letter-spacing:-3px; line-height:1;">
+        The Death of the<br>Soft Interface
+      </h1>
+
+      <!-- Divider + body -->
+      <div class="border-t border-white/10 pt-8 flex flex-col gap-8">
+        <!-- ── EDIT: paste article summary / standfirst here ── -->
+        <p class="font-mono text-dim text-lg leading-[28px] max-w-2xl">
+          Generative systems are dismantling "friendly" UX. We examine the rise of structural brutalism and why the next generation of designers are embracing rigid grids over fluid containers.
+        </p>
+        <!-- CTA button — EDIT: update href to article URL -->
+        <a href="#" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-6 bg-cream text-[#516700] font-mono font-bold text-xs uppercase tracking-[2px] px-8 py-4 w-fit hover:bg-lime transition-colors">
+          Read Article
+          <span class="text-sm">→</span>
+        </a>
+      </div>
+
+      <!-- ── CORE INSIGHTS ─────────────────────────────────────────── -->
+      <div class="bg-raised border border-border mt-8 p-8 flex flex-col gap-8">
+        <!-- Section label -->
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-px bg-muted/40"></div>
+          <span class="font-mono text-muted text-[10px] uppercase tracking-[1px]">Core Insights</span>
+        </div>
+        <!-- 3-col insights grid — EDIT: update each insight text -->
+        <div data-section="insights" class="grid grid-cols-3 gap-8">
+
+          <!-- INSIGHT 01 — EDIT -->
+          <div class="border-l-4 border-cream pl-7 py-2 flex flex-col gap-2">
+            <span class="font-mono font-bold text-cream text-sm">INSIGHT_01</span>
+            <p class="font-mono text-white text-[13px] leading-[18px]">
+              Deterministic layout engines replacing flex-box for rigid computational structuralism.
+            </p>
+          </div>
+
+          <!-- INSIGHT 02 — EDIT -->
+          <div class="border-l-4 border-cream pl-7 py-2 flex flex-col gap-2">
+            <span class="font-mono font-bold text-cream text-sm">INSIGHT_02</span>
+            <p class="font-mono text-white text-[13px] leading-[18px]">
+              The psychological impact of monochromatic depth in data-dense immersive environments.
+            </p>
+          </div>
+
+          <!-- INSIGHT 03 — EDIT -->
+          <div class="border-l-4 border-cream pl-7 py-2 flex flex-col gap-2">
+            <span class="font-mono font-bold text-cream text-sm">INSIGHT_03</span>
+            <p class="font-mono text-white text-[13px] leading-[18px]">
+              Optimizing for machine-readability first to facilitate neural-augmented interaction.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section><!-- /HERO ARTICLE -->
+
+    <!-- ── SPOTLIGHT ARTICLES ────────────────────────────────────────── -->
+    <section data-section="spotlight">
+      <!-- Section header -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-1.5 h-1.5 bg-cream"></div>
+        <span class="font-mono text-cream text-[10px] uppercase tracking-[1px]">Spotlight Articles</span>
+      </div>
+
+      <div class="flex flex-col gap-6">
+
+        <!-- SPOTLIGHT 001 — EDIT: update all fields -->
+        <article class="article-card bg-panel border border-border p-8 flex flex-col gap-6">
+          <div class="flex items-start justify-between">
+            <div class="flex gap-2">
+              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">UX/AI Design</span>
+              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Sourced</span>
+            </div>
+            <span class="font-mono text-muted text-[9px]">001</span>
+          </div>
+          <!-- ── EDIT: article headline ── -->
+          <h2 class="font-display font-bold text-white uppercase leading-none tracking-tight" style="font-size:clamp(32px,3.5vw,48px); letter-spacing:-1.2px; line-height:1.05;">
+            Growing UI: The<br>Intersection of<br>Wetware and Pixels
+          </h2>
+          <!-- ── EDIT: update href ── -->
+          <a href="#" target="_blank" rel="noopener"
+             class="read-link flex items-center gap-4 font-mono text-cream text-[11px] uppercase tracking-[2px] pt-2 w-fit">
+            Read Article <span class="text-sm">→</span>
+          </a>
+        </article>
+
+        <!-- SPOTLIGHT 002 — EDIT: update all fields -->
+        <article class="article-card bg-panel border border-border p-8 flex flex-col gap-6">
+          <div class="flex items-start justify-between">
+            <div class="flex gap-2">
+              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Design Engineering</span>
+              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Sourced</span>
+            </div>
+            <span class="font-mono text-muted text-[9px]">002</span>
+          </div>
+          <!-- ── EDIT: article headline ── -->
+          <h2 class="font-display font-bold text-white uppercase leading-none tracking-tight" style="font-size:clamp(32px,3.5vw,48px); letter-spacing:-1.2px; line-height:1.05;">
+            On-Chain Aesthetics<br>and the New Permanent<br>Canvas
+          </h2>
+          <!-- ── EDIT: update href ── -->
+          <a href="#" target="_blank" rel="noopener"
+             class="read-link flex items-center gap-4 font-mono text-cream text-[11px] uppercase tracking-[2px] pt-2 w-fit">
+            Read Article <span class="text-sm">→</span>
+          </a>
+        </article>
+
+        <!-- SPOTLIGHT 003 — EDIT: update all fields -->
+        <article class="article-card bg-panel border border-border p-8 flex flex-col gap-6">
+          <div class="flex items-start justify-between">
+            <div class="flex gap-2">
+              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Workflow</span>
+              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Video</span>
+            </div>
+            <span class="font-mono text-muted text-[9px]">003</span>
+          </div>
+          <!-- ── EDIT: article headline ── -->
+          <h2 class="font-display font-bold text-white uppercase leading-none tracking-tight" style="font-size:clamp(32px,3.5vw,48px); letter-spacing:-1.2px; line-height:1.05;">
+            How Figma's AI<br>Handoff Is Rewriting<br>the Design → Dev Loop
+          </h2>
+          <!-- ── EDIT: update href ── -->
+          <a href="#" target="_blank" rel="noopener"
+             class="read-link flex items-center gap-4 font-mono text-cream text-[11px] uppercase tracking-[2px] pt-2 w-fit">
+            Watch Video <span class="text-sm">→</span>
+          </a>
+        </article>
+
+      </div>
+    </section><!-- /SPOTLIGHT ARTICLES -->
+
+    <!-- ── VISUAL INSPO ──────────────────────────────────────────────── -->
+    <section data-section="visual-inspo" class="pb-24">
+      <!-- Section header -->
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-1.5 h-1.5 bg-cream"></div>
+        <span class="font-mono text-cream text-[10px] uppercase tracking-[1px]">Visual Inspo</span>
+      </div>
+
+      <div class="flex flex-col gap-6">
+
+        <!-- INSPO 01 — EDIT: update source name, badge, and img src -->
+        <div class="bg-panel border border-border overflow-hidden">
+          <div class="bg-black border-b border-white/10 flex items-center justify-between px-6 py-5">
+            <span class="font-display font-bold text-white text-2xl uppercase tracking-tight">The Brand Identity</span>
+            <span class="bg-cream text-[#516700] font-mono font-bold text-[10px] tracking-[1px] uppercase px-3 py-1">TBI</span>
+          </div>
+          <!-- ── EDIT: replace src with direct image URL ── -->
+          <img
+            src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=1200&q=80"
+            alt="The Brand Identity visual"
+            class="img-gray w-full h-[280px] object-cover block"
+          />
+        </div>
+
+        <!-- INSPO 02 — EDIT: update source name, badge, and img src -->
+        <div class="bg-panel border border-border overflow-hidden">
+          <div class="bg-black border-b border-white/10 flex items-center justify-between px-6 py-5">
+            <span class="font-display font-bold text-white text-2xl uppercase tracking-tight">Awwwards</span>
+            <span class="bg-cream text-[#516700] font-mono font-bold text-[10px] tracking-[1px] uppercase px-3 py-1">AWWW</span>
+          </div>
+          <!-- ── EDIT: replace src with direct image URL ── -->
+          <img
+            src="https://images.unsplash.com/photo-1545235617-9465d2a55698?w=1200&q=80"
+            alt="Awwwards showcase visual"
+            class="img-gray w-full h-[280px] object-cover block"
+          />
+        </div>
+
+      </div>
+    </section><!-- /VISUAL INSPO -->
+
+  </main><!-- /CENTER CONTENT -->
+
+  <!-- ══ RIGHT SIDEBAR ═════════════════════════════════════════════════ -->
+  <aside class="w-[200px] shrink-0 bg-black/40 border-l border-border sticky top-[65px] self-start h-[calc(100vh-65px)] flex flex-col" style="backdrop-filter: blur(6px);">
+
+    <!-- Spacer bar matching header height feel -->
+    <div class="border-b border-border h-12 shrink-0"></div>
+
+    <!-- Thumbnail index — EDIT: add/remove thumbnail cards as needed -->
+    <div data-section="sidebar-thumbs" class="sidebar-scroll flex flex-col gap-4 p-4">
+
+      <!-- THUMB 01 — EDIT: update src and label -->
+      <div class="bg-mid border border-border relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=70"
+          alt="Thumb 01"
+          class="img-gray w-full h-[120px] object-cover block"
+        />
+        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">01_HERO</span>
+      </div>
+
+      <!-- THUMB 02 — EDIT -->
+      <div class="bg-mid border border-border relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&q=70"
+          alt="Thumb 02"
+          class="img-gray w-full h-[120px] object-cover block"
+        />
+        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">02_SPOT_A</span>
+      </div>
+
+      <!-- THUMB 03 — EDIT -->
+      <div class="bg-mid border border-border relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1545235617-9465d2a55698?w=400&q=70"
+          alt="Thumb 03"
+          class="img-gray w-full h-[120px] object-cover block"
+        />
+        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">03_SPOT_B</span>
+      </div>
+
+      <!-- THUMB 04 — EDIT -->
+      <div class="bg-mid border border-border relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=70"
+          alt="Thumb 04"
+          class="img-gray w-full h-[120px] object-cover block"
+        />
+        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">04_INSP_TBI</span>
+      </div>
+
+      <!-- THUMB 05 — EDIT -->
+      <div class="bg-mid border border-border relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&q=70"
+          alt="Thumb 05"
+          class="img-gray w-full h-[120px] object-cover block"
+        />
+        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">05_INSP_AWW</span>
+      </div>
+
+    </div>
+  </aside><!-- /RIGHT SIDEBAR -->
+
+</div><!-- /MAIN LAYOUT -->
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════════════════════════════ -->
+<footer class="border-t border-border px-6 py-6 flex items-center justify-between">
+  <span class="font-mono text-muted text-[10px] uppercase tracking-wide">
+    Design &times; AI Digest — Issue #001 — 24 MAR 2025
+  </span>
+  <span class="font-mono text-muted text-[10px] uppercase tracking-wide">
+    <!-- ── EDIT: add your name or handle ── -->
+    Curated by YOU
+  </span>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     PHASE 2 HOOK (currently inactive)
+     ─────────────────────────────────────────────────────────────────────
+     When you're ready to move to dynamic content, this is where your
+     fetch() call will go — pulling JSON from Supabase/Airtable and
+     hydrating the data-section elements above programmatically.
+
+     Example (Phase 2):
+     fetch('https://YOUR_SUPABASE_URL/rest/v1/articles?select=*&issue=eq.1')
+       .then(r => r.json())
+       .then(articles => renderDigest(articles));
+════════════════════════════════════════════════════════════════════════ -->
+
+</body>
+</html>
