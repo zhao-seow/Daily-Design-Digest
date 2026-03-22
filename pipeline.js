@@ -17,7 +17,8 @@ import { createClient } from '@supabase/supabase-js';
 import { search    } from './search.js';
 import { curate    } from './curate.js';
 import { summarise } from './summarise.js';
-import { upload    } from './upload.js';
+import { upload           } from './upload.js';
+import { sendNotification } from './email.js';
 
 // ─── Determine next issue number ─────────────────────────────────────────────
 async function getNextIssue() {
@@ -65,6 +66,10 @@ async function main() {
   // 5. Upload
   console.log('\n● UPLOAD');
   await upload(enriched, issue);
+
+  // 6. Email notification
+  console.log('\n● EMAIL');
+  await sendNotification(enriched, issue);
 
   console.log(`\n✓ Issue #${String(issue).padStart(3, '0')} published successfully\n`);
 }

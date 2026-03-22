@@ -39,7 +39,7 @@ export async function curate(rawResults, sectionCounts = { hero: 1, spotlight: 3
 
   const client  = new Anthropic();
   const message = await client.messages.create({
-    model:      'claude-sonnet-4-6',
+    model:      'claude-haiku-4-5-20251001',
     max_tokens: 2048,
     system:
       'You are the editorial curator for Design × AI Digest, a weekly newsletter ' +

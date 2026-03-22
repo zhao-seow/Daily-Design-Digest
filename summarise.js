@@ -20,7 +20,7 @@ function extractJSON(text) {
 async function getSummary(item) {
   const client = new Anthropic();
   const msg = await client.messages.create({
-    model:      'claude-sonnet-4-6',
+    model:      'claude-haiku-4-5-20251001',
     max_tokens: 400,
     system:     'You are a sharp editorial writer for a design newsletter. Be concise and insightful. No fluff.',
     messages: [{
@@ -43,7 +43,7 @@ Return ONLY valid JSON: { "summary": "..." }`,
 async function getInsights(item) {
   const client = new Anthropic();
   const msg = await client.messages.create({
-    model:      'claude-sonnet-4-6',
+    model:      'claude-haiku-4-5-20251001',
     max_tokens: 500,
     system:     'You are a sharp editorial writer for a design newsletter.',
     messages: [{

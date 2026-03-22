@@ -1,9 +1,12 @@
 # Secrets — never commit
 keys.env
 .env
+CLAUDE.md
 
 # Node
 node_modules/
 
 # macOS
 .DS_Store
+README-Offline.md
+README-offline.md
