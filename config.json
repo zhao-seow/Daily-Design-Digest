@@ -1,0 +1,18 @@
+{
+  "queries": [
+    "UX design AI tools news 2025",
+    "design systems product design trends 2025",
+    "brand identity visual design case study 2025",
+    "design engineering frontend craft 2025",
+    "AI product design interface 2025"
+  ],
+  "sections": {
+    "hero":         1,
+    "spotlight":    3,
+    "visual-inspo": 2
+  },
+  "search": {
+    "maxResultsPerQuery": 8,
+    "searchDepth":        "advanced"
+  }
+}

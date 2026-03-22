@@ -1,0 +1,15 @@
+{
+  "name": "ddd-pipeline",
+  "version": "1.0.0",
+  "description": "Design × AI Digest — weekly pipeline",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node pipeline.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk":    "^0.36.0",
+    "@supabase/supabase-js": "^2.47.0",
+    "dotenv":                "^16.4.5"
+  }
+}

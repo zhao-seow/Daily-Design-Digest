@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Design & AI Digest</title>
+  <title>Design &times; AI Digest</title>
 
   <!-- Tailwind CSS CDN — no build step needed -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -23,19 +23,19 @@
             mono:    ['"IBM Plex Mono"', 'monospace'],
           },
           colors: {
-            lime:    '#cafd00',   // large date / accent green
-            cream:   '#f3ffca',   // labels / borders / button
-            dark:    '#0e0e0e',   // page background
-            panel:   '#131313',   // article card background
-            raised:  '#1f1f1f',   // inset card background
-            mid:     '#262626',   // image card background
-            muted:   '#757575',   // secondary text
-            dim:     '#ababab',   // body text
-            border:  'rgba(72,72,72,0.4)',
+            lime:   '#cafd00',
+            cream:  '#f3ffca',
+            dark:   '#0e0e0e',
+            panel:  '#131313',
+            raised: '#1f1f1f',
+            mid:    '#262626',
+            muted:  '#757575',
+            dim:    '#ababab',
+            border: 'rgba(72,72,72,0.4)',
           },
           letterSpacing: {
             tightest: '-0.05em',
-            wide: '0.1em',
+            wide:     '0.1em',
           },
         },
       },
@@ -48,7 +48,7 @@
     html { scroll-behavior: smooth; }
     body { background: #0e0e0e; color: #fff; font-family: 'IBM Plex Mono', monospace; }
 
-    /* ── Grid overlay (subtle) ──────────────────────────────────────── */
+    /* ── Grid overlay ───────────────────────────────────────────────── */
     .grid-overlay {
       background-image:
         linear-gradient(90deg, rgba(243,255,202,0.025) 1px, transparent 1px),
@@ -76,33 +76,24 @@
     .read-link:hover { color: #cafd00; }
 
     /* ── Timeline chip active ───────────────────────────────────────── */
-    .chip-active  { background: #f3ffca; color: #516700; }
+    .chip-active   { background: #f3ffca; color: #516700; }
     .chip-inactive { background: #1f1f1f; color: #fff; border: 1px solid rgba(72,72,72,0.4); }
     .chip-inactive .chip-month { color: #757575; }
 
     /* ── Sticky header ──────────────────────────────────────────────── */
     header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(8px); }
 
-    /* ─────────────────────────────────────────────────────────────────
-       HOW TO EDIT CONTENT  (Manual Mode)
-       ─────────────────────────────────────────────────────────────────
-       All editable content is wrapped in data attributes you can
-       search for in VS Code. Ctrl+F the section name, e.g.:
-         data-section="hero"
-         data-section="insights"
-         data-section="spotlight"
-         data-section="visual-inspo"
-         data-section="sidebar-thumbs"
-
-       IMAGES — Use direct media URLs, not page URLs:
-         ✅  https://cdn.example.com/image.jpg
-         ✅  https://api.microlink.io/?url=PAGE_URL&screenshot=true&meta=false&embed=screenshot.url
-         ❌  https://www.somewebsite.com/article (this is a page, not an image)
-
-       MICROLINK — To auto-extract OG image from any article URL, use:
-         https://api.microlink.io/?url=YOUR_ARTICLE_URL&screenshot=true&meta=false&embed=screenshot.url
-         Replace YOUR_ARTICLE_URL with the encoded article URL.
-    ──────────────────────────────────────────────────────────────────── -->
+    /* ── Skeleton shimmer ───────────────────────────────────────────── */
+    @keyframes shimmer {
+      0%   { background-position: -200% 0; }
+      100% { background-position:  200% 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #1f1f1f 25%, #2a2a2a 50%, #1f1f1f 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 2px;
+    }
   </style>
 </head>
 
@@ -116,8 +107,7 @@
     Design &times; AI Digest
   </span>
   <div class="flex items-center gap-4">
-    <!-- ── EDIT: Update issue number and date each week ── -->
-    <span class="font-mono text-muted text-[10px] uppercase tracking-wide">Issue #001</span>
+    <span id="header-issue" class="font-mono text-muted text-[10px] uppercase tracking-wide">Issue #—</span>
     <span class="font-mono text-cream text-[10px] uppercase tracking-wide border border-border px-3 py-1">Weekly</span>
   </div>
 </header>
@@ -130,321 +120,69 @@
   <!-- ══ LEFT SIDEBAR ══════════════════════════════════════════════════ -->
   <aside class="w-[220px] shrink-0 bg-panel border-r border-border flex flex-col px-8 py-8 sticky top-[65px] self-start h-[calc(100vh-65px)]">
 
-    <!-- DATE — EDIT: update DD / MON each issue -->
+    <!-- DATE -->
     <div class="mt-auto">
-      <div data-section="date" class="font-display font-bold text-lime leading-none uppercase" style="font-size:88px; letter-spacing:-4px; line-height:0.85;">
-        <!-- ── EDIT: Change day number ── -->
-        24<br>MAR
+      <div id="sidebar-date"
+           class="font-display font-bold text-lime leading-none uppercase"
+           style="font-size:88px; letter-spacing:-4px; line-height:0.85;">
+        <div class="skeleton h-[152px] w-full"></div>
       </div>
-
-      <div class="border-t-2 border-cream mt-8 pt-4 flex items-baseline justify-between">
-        <!-- ── EDIT: Update year ── -->
-        <span class="font-display font-light text-white text-2xl">2025</span>
+      <div id="sidebar-year"
+           class="border-t-2 border-cream mt-8 pt-4 flex items-baseline justify-between">
+        <div class="skeleton h-7 w-16"></div>
         <span class="font-mono text-muted text-2xl">AI_UX</span>
       </div>
     </div>
 
-    <!-- APPS USED — EDIT: list tools/apps featured this issue -->
-    <div class="mt-10 bg-raised border border-border p-4 flex flex-col gap-1">
+    <!-- TOOLS -->
+    <div id="sidebar-tools"
+         class="mt-10 bg-raised border border-border p-4 flex flex-col gap-1">
       <span class="font-mono text-muted text-[10px] uppercase tracking-wide">Tools Featured</span>
-      <div data-section="tools" class="font-display font-normal text-cream text-lg uppercase leading-6 mt-1">
-        <!-- ── EDIT: one tool per line ── -->
-        Figma<br>
-        Cursor<br>
-        v0
-      </div>
+      <div class="skeleton h-20 w-full mt-1"></div>
     </div>
 
-    <!-- TIMELINE INDEX — EDIT: update dates, active = current issue -->
+    <!-- TIMELINE -->
     <div class="mt-10 border-t border-border pt-6">
       <span class="font-mono text-muted text-[10px] uppercase tracking-[1px] block mb-4">Timeline Index</span>
-      <div data-section="timeline" class="flex flex-wrap gap-2">
-        <!-- Active chip -->
-        <div class="chip-active flex flex-col items-center justify-center w-12 h-12 text-center">
-          <span class="font-mono font-bold text-[10px]">24</span>
-          <span class="font-mono text-[8px] uppercase">MAR</span>
-        </div>
-        <!-- Past chips — EDIT: add one chip per past issue -->
-        <div class="chip-inactive flex flex-col items-center justify-center w-12 h-12 text-center">
-          <span class="font-mono text-[10px]">17</span>
-          <span class="chip-month font-mono text-[8px] uppercase">MAR</span>
-        </div>
-        <div class="chip-inactive flex flex-col items-center justify-center w-12 h-12 text-center">
-          <span class="font-mono text-[10px]">10</span>
-          <span class="chip-month font-mono text-[8px] uppercase">MAR</span>
-        </div>
-        <div class="chip-inactive flex flex-col items-center justify-center w-12 h-12 text-center">
-          <span class="font-mono text-[10px]">03</span>
-          <span class="chip-month font-mono text-[8px] uppercase">MAR</span>
-        </div>
-        <!-- Arrow chip -->
-        <div class="flex items-center justify-center w-12 h-12 border border-border text-muted font-mono text-xs">→</div>
+      <div id="sidebar-timeline" class="flex flex-wrap gap-2">
+        <div class="skeleton w-12 h-12"></div>
+        <div class="skeleton w-12 h-12"></div>
+        <div class="skeleton w-12 h-12"></div>
       </div>
     </div>
 
   </aside><!-- /LEFT SIDEBAR -->
 
   <!-- ══ CENTER CONTENT ════════════════════════════════════════════════ -->
-  <main class="flex-1 border-r border-border px-12 py-12 flex flex-col gap-16">
-
-    <!-- ── HERO ARTICLE ─────────────────────────────────────────────── -->
-    <section data-section="hero">
-
-      <!-- Hero image card -->
-      <div class="bg-mid border border-border p-px mb-8 relative">
-        <!-- ── EDIT: replace src with direct image URL or Microlink URL ── -->
-        <!-- Microlink example: https://api.microlink.io/?url=ARTICLE_URL&screenshot=true&meta=false&embed=screenshot.url -->
-        <img
-          src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&q=80"
-          alt="Hero article thumbnail"
-          class="img-gray w-full h-[320px] object-cover block"
-        />
-        <!-- Image label -->
-        <span class="absolute bottom-3 left-3 bg-cream text-[#516700] font-mono font-bold text-[8px] px-1 py-0.5">01_HERO</span>
-        <!-- Border accent -->
-        <div class="absolute inset-0 border-2 border-cream pointer-events-none"></div>
+  <main id="main-content" class="flex-1 border-r border-border px-12 py-12 flex flex-col gap-16">
+    <!-- Skeleton loading state -->
+    <div class="flex flex-col gap-8">
+      <div class="skeleton h-[320px] w-full"></div>
+      <div class="skeleton h-5 w-48"></div>
+      <div class="skeleton h-24 w-3/4"></div>
+      <div class="skeleton h-16 w-full"></div>
+      <div class="bg-raised border border-border p-8 grid grid-cols-3 gap-8">
+        <div class="skeleton h-20"></div>
+        <div class="skeleton h-20"></div>
+        <div class="skeleton h-20"></div>
       </div>
-
-      <!-- Tags -->
-      <div class="flex gap-2 mb-6">
-        <!-- ── EDIT: update category tags ── -->
-        <span class="font-mono text-cream text-[10px] uppercase border border-cream/40 px-3 py-1">UX/AI Design</span>
-        <span class="font-mono text-muted text-[10px] uppercase border border-border px-3 py-1">Sourced</span>
-      </div>
-
-      <!-- Headline -->
-      <!-- ── EDIT: paste article headline here ── -->
-      <h1 class="font-display font-bold text-white uppercase leading-none tracking-tightest mb-6" style="font-size:clamp(48px,5vw,72px); letter-spacing:-3px; line-height:1;">
-        The Death of the<br>Soft Interface
-      </h1>
-
-      <!-- Divider + body -->
-      <div class="border-t border-white/10 pt-8 flex flex-col gap-8">
-        <!-- ── EDIT: paste article summary / standfirst here ── -->
-        <p class="font-mono text-dim text-lg leading-[28px] max-w-2xl">
-          Generative systems are dismantling "friendly" UX. We examine the rise of structural brutalism and why the next generation of designers are embracing rigid grids over fluid containers.
-        </p>
-        <!-- CTA button — EDIT: update href to article URL -->
-        <a href="#" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-6 bg-cream text-[#516700] font-mono font-bold text-xs uppercase tracking-[2px] px-8 py-4 w-fit hover:bg-lime transition-colors">
-          Read Article
-          <span class="text-sm">→</span>
-        </a>
-      </div>
-
-      <!-- ── CORE INSIGHTS ─────────────────────────────────────────── -->
-      <div class="bg-raised border border-border mt-8 p-8 flex flex-col gap-8">
-        <!-- Section label -->
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-px bg-muted/40"></div>
-          <span class="font-mono text-muted text-[10px] uppercase tracking-[1px]">Core Insights</span>
-        </div>
-        <!-- 3-col insights grid — EDIT: update each insight text -->
-        <div data-section="insights" class="grid grid-cols-3 gap-8">
-
-          <!-- INSIGHT 01 — EDIT -->
-          <div class="border-l-4 border-cream pl-7 py-2 flex flex-col gap-2">
-            <span class="font-mono font-bold text-cream text-sm">INSIGHT_01</span>
-            <p class="font-mono text-white text-[13px] leading-[18px]">
-              Deterministic layout engines replacing flex-box for rigid computational structuralism.
-            </p>
-          </div>
-
-          <!-- INSIGHT 02 — EDIT -->
-          <div class="border-l-4 border-cream pl-7 py-2 flex flex-col gap-2">
-            <span class="font-mono font-bold text-cream text-sm">INSIGHT_02</span>
-            <p class="font-mono text-white text-[13px] leading-[18px]">
-              The psychological impact of monochromatic depth in data-dense immersive environments.
-            </p>
-          </div>
-
-          <!-- INSIGHT 03 — EDIT -->
-          <div class="border-l-4 border-cream pl-7 py-2 flex flex-col gap-2">
-            <span class="font-mono font-bold text-cream text-sm">INSIGHT_03</span>
-            <p class="font-mono text-white text-[13px] leading-[18px]">
-              Optimizing for machine-readability first to facilitate neural-augmented interaction.
-            </p>
-          </div>
-
-        </div>
-      </div>
-    </section><!-- /HERO ARTICLE -->
-
-    <!-- ── SPOTLIGHT ARTICLES ────────────────────────────────────────── -->
-    <section data-section="spotlight">
-      <!-- Section header -->
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-1.5 h-1.5 bg-cream"></div>
-        <span class="font-mono text-cream text-[10px] uppercase tracking-[1px]">Spotlight Articles</span>
-      </div>
-
-      <div class="flex flex-col gap-6">
-
-        <!-- SPOTLIGHT 001 — EDIT: update all fields -->
-        <article class="article-card bg-panel border border-border p-8 flex flex-col gap-6">
-          <div class="flex items-start justify-between">
-            <div class="flex gap-2">
-              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">UX/AI Design</span>
-              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Sourced</span>
-            </div>
-            <span class="font-mono text-muted text-[9px]">001</span>
-          </div>
-          <!-- ── EDIT: article headline ── -->
-          <h2 class="font-display font-bold text-white uppercase leading-none tracking-tight" style="font-size:clamp(32px,3.5vw,48px); letter-spacing:-1.2px; line-height:1.05;">
-            Growing UI: The<br>Intersection of<br>Wetware and Pixels
-          </h2>
-          <!-- ── EDIT: update href ── -->
-          <a href="#" target="_blank" rel="noopener"
-             class="read-link flex items-center gap-4 font-mono text-cream text-[11px] uppercase tracking-[2px] pt-2 w-fit">
-            Read Article <span class="text-sm">→</span>
-          </a>
-        </article>
-
-        <!-- SPOTLIGHT 002 — EDIT: update all fields -->
-        <article class="article-card bg-panel border border-border p-8 flex flex-col gap-6">
-          <div class="flex items-start justify-between">
-            <div class="flex gap-2">
-              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Design Engineering</span>
-              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Sourced</span>
-            </div>
-            <span class="font-mono text-muted text-[9px]">002</span>
-          </div>
-          <!-- ── EDIT: article headline ── -->
-          <h2 class="font-display font-bold text-white uppercase leading-none tracking-tight" style="font-size:clamp(32px,3.5vw,48px); letter-spacing:-1.2px; line-height:1.05;">
-            On-Chain Aesthetics<br>and the New Permanent<br>Canvas
-          </h2>
-          <!-- ── EDIT: update href ── -->
-          <a href="#" target="_blank" rel="noopener"
-             class="read-link flex items-center gap-4 font-mono text-cream text-[11px] uppercase tracking-[2px] pt-2 w-fit">
-            Read Article <span class="text-sm">→</span>
-          </a>
-        </article>
-
-        <!-- SPOTLIGHT 003 — EDIT: update all fields -->
-        <article class="article-card bg-panel border border-border p-8 flex flex-col gap-6">
-          <div class="flex items-start justify-between">
-            <div class="flex gap-2">
-              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Workflow</span>
-              <span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">Video</span>
-            </div>
-            <span class="font-mono text-muted text-[9px]">003</span>
-          </div>
-          <!-- ── EDIT: article headline ── -->
-          <h2 class="font-display font-bold text-white uppercase leading-none tracking-tight" style="font-size:clamp(32px,3.5vw,48px); letter-spacing:-1.2px; line-height:1.05;">
-            How Figma's AI<br>Handoff Is Rewriting<br>the Design → Dev Loop
-          </h2>
-          <!-- ── EDIT: update href ── -->
-          <a href="#" target="_blank" rel="noopener"
-             class="read-link flex items-center gap-4 font-mono text-cream text-[11px] uppercase tracking-[2px] pt-2 w-fit">
-            Watch Video <span class="text-sm">→</span>
-          </a>
-        </article>
-
-      </div>
-    </section><!-- /SPOTLIGHT ARTICLES -->
-
-    <!-- ── VISUAL INSPO ──────────────────────────────────────────────── -->
-    <section data-section="visual-inspo" class="pb-24">
-      <!-- Section header -->
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-1.5 h-1.5 bg-cream"></div>
-        <span class="font-mono text-cream text-[10px] uppercase tracking-[1px]">Visual Inspo</span>
-      </div>
-
-      <div class="flex flex-col gap-6">
-
-        <!-- INSPO 01 — EDIT: update source name, badge, and img src -->
-        <div class="bg-panel border border-border overflow-hidden">
-          <div class="bg-black border-b border-white/10 flex items-center justify-between px-6 py-5">
-            <span class="font-display font-bold text-white text-2xl uppercase tracking-tight">The Brand Identity</span>
-            <span class="bg-cream text-[#516700] font-mono font-bold text-[10px] tracking-[1px] uppercase px-3 py-1">TBI</span>
-          </div>
-          <!-- ── EDIT: replace src with direct image URL ── -->
-          <img
-            src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=1200&q=80"
-            alt="The Brand Identity visual"
-            class="img-gray w-full h-[280px] object-cover block"
-          />
-        </div>
-
-        <!-- INSPO 02 — EDIT: update source name, badge, and img src -->
-        <div class="bg-panel border border-border overflow-hidden">
-          <div class="bg-black border-b border-white/10 flex items-center justify-between px-6 py-5">
-            <span class="font-display font-bold text-white text-2xl uppercase tracking-tight">Awwwards</span>
-            <span class="bg-cream text-[#516700] font-mono font-bold text-[10px] tracking-[1px] uppercase px-3 py-1">AWWW</span>
-          </div>
-          <!-- ── EDIT: replace src with direct image URL ── -->
-          <img
-            src="https://images.unsplash.com/photo-1545235617-9465d2a55698?w=1200&q=80"
-            alt="Awwwards showcase visual"
-            class="img-gray w-full h-[280px] object-cover block"
-          />
-        </div>
-
-      </div>
-    </section><!-- /VISUAL INSPO -->
-
+    </div>
+    <div class="flex flex-col gap-6">
+      <div class="skeleton h-5 w-40"></div>
+      <div class="skeleton h-44"></div>
+      <div class="skeleton h-44"></div>
+      <div class="skeleton h-44"></div>
+    </div>
   </main><!-- /CENTER CONTENT -->
 
   <!-- ══ RIGHT SIDEBAR ═════════════════════════════════════════════════ -->
   <aside class="w-[200px] shrink-0 bg-black/40 border-l border-border sticky top-[65px] self-start h-[calc(100vh-65px)] flex flex-col" style="backdrop-filter: blur(6px);">
-
-    <!-- Spacer bar matching header height feel -->
     <div class="border-b border-border h-12 shrink-0"></div>
-
-    <!-- Thumbnail index — EDIT: add/remove thumbnail cards as needed -->
-    <div data-section="sidebar-thumbs" class="sidebar-scroll flex flex-col gap-4 p-4">
-
-      <!-- THUMB 01 — EDIT: update src and label -->
-      <div class="bg-mid border border-border relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=70"
-          alt="Thumb 01"
-          class="img-gray w-full h-[120px] object-cover block"
-        />
-        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">01_HERO</span>
-      </div>
-
-      <!-- THUMB 02 — EDIT -->
-      <div class="bg-mid border border-border relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&q=70"
-          alt="Thumb 02"
-          class="img-gray w-full h-[120px] object-cover block"
-        />
-        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">02_SPOT_A</span>
-      </div>
-
-      <!-- THUMB 03 — EDIT -->
-      <div class="bg-mid border border-border relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1545235617-9465d2a55698?w=400&q=70"
-          alt="Thumb 03"
-          class="img-gray w-full h-[120px] object-cover block"
-        />
-        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">03_SPOT_B</span>
-      </div>
-
-      <!-- THUMB 04 — EDIT -->
-      <div class="bg-mid border border-border relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=70"
-          alt="Thumb 04"
-          class="img-gray w-full h-[120px] object-cover block"
-        />
-        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">04_INSP_TBI</span>
-      </div>
-
-      <!-- THUMB 05 — EDIT -->
-      <div class="bg-mid border border-border relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&q=70"
-          alt="Thumb 05"
-          class="img-gray w-full h-[120px] object-cover block"
-        />
-        <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">05_INSP_AWW</span>
-      </div>
-
+    <div id="sidebar-thumbs" class="sidebar-scroll flex flex-col gap-4 p-4">
+      <div class="skeleton h-[120px]"></div>
+      <div class="skeleton h-[120px]"></div>
+      <div class="skeleton h-[120px]"></div>
+      <div class="skeleton h-[120px]"></div>
     </div>
   </aside><!-- /RIGHT SIDEBAR -->
 
@@ -454,27 +192,377 @@
      FOOTER
 ════════════════════════════════════════════════════════════════════════ -->
 <footer class="border-t border-border px-6 py-6 flex items-center justify-between">
-  <span class="font-mono text-muted text-[10px] uppercase tracking-wide">
-    Design &times; AI Digest — Issue #001 — 24 MAR 2025
+  <span id="footer-text" class="font-mono text-muted text-[10px] uppercase tracking-wide">
+    Design &times; AI Digest
   </span>
   <span class="font-mono text-muted text-[10px] uppercase tracking-wide">
-    <!-- ── EDIT: add your name or handle ── -->
-    Curated by YOU
+    Curated by DDD
   </span>
 </footer>
 
 <!-- ══════════════════════════════════════════════════════════════════════
-     PHASE 2 HOOK (currently inactive)
-     ─────────────────────────────────────────────────────────────────────
-     When you're ready to move to dynamic content, this is where your
-     fetch() call will go — pulling JSON from Supabase/Airtable and
-     hydrating the data-section elements above programmatically.
-
-     Example (Phase 2):
-     fetch('https://YOUR_SUPABASE_URL/rest/v1/articles?select=*&issue=eq.1')
-       .then(r => r.json())
-       .then(articles => renderDigest(articles));
+     DYNAMIC DATA — Supabase fetch + render
 ════════════════════════════════════════════════════════════════════════ -->
+<script>
+  // ─── Config ────────────────────────────────────────────────────────────
+  const SUPABASE_URL = 'https://rpgkxbgotmsdonpzzgpf.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_AI4sfWeEmPT01j6KtbJ4zQ_jXyY5LIf';
+  const TABLE        = 'DDD_Database';
+
+  // ─── Utilities ─────────────────────────────────────────────────────────
+
+  /** Escape a value for safe insertion into HTML */
+  function esc(val) {
+    if (val == null) return '';
+    return String(val)
+      .replace(/&/g,  '&amp;')
+      .replace(/</g,  '&lt;')
+      .replace(/>/g,  '&gt;')
+      .replace(/"/g,  '&quot;')
+      .replace(/'/g,  '&#39;');
+  }
+
+  /** Return best thumbnail URL for an item */
+  function thumbUrl(item) {
+    if (item.thumbnail_url) return item.thumbnail_url;
+    if (item.url) return `https://api.microlink.io/?url=${encodeURIComponent(item.url)}&screenshot=true&meta=false&embed=screenshot.url`;
+    return '';
+  }
+
+  /** Parse comma-separated tags string into an array */
+  function parseTags(tags) {
+    if (!tags) return [];
+    return tags.split(',').map(t => t.trim()).filter(Boolean);
+  }
+
+  /** CTA label based on content_type */
+  function ctaLabel(item) {
+    const ct = (item.content_type || '').toLowerCase();
+    if (ct === 'video') return 'Watch Video';
+    if (ct === 'tool')  return 'View Tool';
+    return 'Read Article';
+  }
+
+  /** 2–4 char abbreviation from a name */
+  function abbrev(name) {
+    if (!name) return '—';
+    return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 4);
+  }
+
+  /** Extract day / month / year from an ISO timestamp (UTC) */
+  function parseDate(iso) {
+    const d = new Date(iso);
+    return {
+      day:   String(d.getUTCDate()).padStart(2, '0'),
+      month: d.toLocaleString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
+      year:  d.getUTCFullYear(),
+    };
+  }
+
+  /** Zero-pad issue number to 3 digits */
+  function padIssue(n) { return String(n).padStart(3, '0'); }
+
+  // ─── Supabase REST helper ───────────────────────────────────────────────
+  async function dbQuery(params) {
+    const url = new URL(`${SUPABASE_URL}/rest/v1/${TABLE}`);
+    Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
+    const res = await fetch(url.toString(), {
+      headers: {
+        'apikey':        SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`Supabase ${res.status}: ${body}`);
+    }
+    return res.json();
+  }
+
+  // ─── Renderers ─────────────────────────────────────────────────────────
+
+  function renderSidebar(items, allIssues, latestIssue) {
+    // Use the hero item's created_at for the date; fall back to first item
+    const anchor = items.find(i => i.section === 'hero') || items[0];
+    const { day, month, year } = parseDate(anchor ? anchor.created_at : new Date().toISOString());
+
+    // Date block
+    document.getElementById('sidebar-date').innerHTML = `${day}<br>${month}`;
+    document.getElementById('sidebar-year').innerHTML =
+      `<span class="font-display font-light text-white text-2xl">${esc(year)}</span>
+       <span class="font-mono text-muted text-2xl">AI_UX</span>`;
+
+    // Tools block — prefer section='tools' items; fall back to unique source names
+    const toolItems = items.filter(i => i.section === 'tools');
+    let toolLines;
+    if (toolItems.length) {
+      toolLines = toolItems.map(i => esc(i.title || i.source_name)).join('<br>');
+    } else {
+      toolLines = [...new Set(items.map(i => i.source_name).filter(Boolean))]
+        .slice(0, 5).map(esc).join('<br>');
+    }
+    document.getElementById('sidebar-tools').innerHTML =
+      `<span class="font-mono text-muted text-[10px] uppercase tracking-wide">Tools Featured</span>
+       <div class="font-display font-normal text-cream text-lg uppercase leading-6 mt-1">${toolLines || '—'}</div>`;
+
+    // Timeline chips — most recent 5 issues
+    const recent = allIssues.slice(0, 5);
+    const chips  = recent.map(({ issue, created_at }) => {
+      const { day: d, month: m } = parseDate(created_at);
+      const active = issue === latestIssue;
+      return `<div class="${active ? 'chip-active' : 'chip-inactive'} flex flex-col items-center justify-center w-12 h-12 text-center cursor-default">
+        <span class="font-mono ${active ? 'font-bold' : ''} text-[10px]">${d}</span>
+        <span class="${active ? '' : 'chip-month'} font-mono text-[8px] uppercase">${m}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('sidebar-timeline').innerHTML =
+      chips +
+      `<div class="flex items-center justify-center w-12 h-12 border border-border text-muted font-mono text-xs">→</div>`;
+  }
+
+  function renderHero(hero) {
+    if (!hero) {
+      return `<section data-section="hero">
+        <p class="font-mono text-muted text-sm">No hero article this issue.</p>
+      </section>`;
+    }
+
+    const tags = parseTags(hero.tags);
+    const img  = thumbUrl(hero);
+
+    const tagPills = tags.length
+      ? tags.map(t => `<span class="font-mono text-cream text-[10px] uppercase border border-cream/40 px-3 py-1">${esc(t)}</span>`).join('')
+      : '';
+
+    const insightsHtml = (hero.insight_1 || hero.insight_2 || hero.insight_3)
+      ? `<div class="bg-raised border border-border mt-8 p-8 flex flex-col gap-8">
+           <div class="flex items-center gap-3">
+             <div class="w-12 h-px bg-muted/40"></div>
+             <span class="font-mono text-muted text-[10px] uppercase tracking-[1px]">Core Insights</span>
+           </div>
+           <div data-section="insights" class="grid grid-cols-3 gap-8">
+             ${[1, 2, 3].filter(n => hero[`insight_${n}`]).map(n => `
+               <div class="border-l-4 border-cream pl-7 py-2 flex flex-col gap-2">
+                 <span class="font-mono font-bold text-cream text-sm">INSIGHT_0${n}</span>
+                 <p class="font-mono text-white text-[13px] leading-[18px]">${esc(hero[`insight_${n}`])}</p>
+               </div>`).join('')}
+           </div>
+         </div>`
+      : '';
+
+    return `
+      <section data-section="hero">
+        <div class="bg-mid border border-border p-px mb-8 relative">
+          ${img ? `<img src="${esc(img)}" alt="${esc(hero.title)}"
+               class="img-gray w-full h-[320px] object-cover block" />` : ''}
+          <span class="absolute bottom-3 left-3 bg-cream text-[#516700] font-mono font-bold text-[8px] px-1 py-0.5">01_HERO</span>
+          <div class="absolute inset-0 border-2 border-cream pointer-events-none"></div>
+        </div>
+
+        <div class="flex gap-2 mb-6 flex-wrap">
+          ${tagPills}
+          <span class="font-mono text-muted text-[10px] uppercase border border-border px-3 py-1">Sourced</span>
+        </div>
+
+        <h1 class="font-display font-bold text-white uppercase leading-none tracking-tightest mb-6"
+            style="font-size:clamp(48px,5vw,72px); letter-spacing:-3px; line-height:1;">
+          ${esc(hero.title)}
+        </h1>
+
+        <div class="border-t border-white/10 pt-8 flex flex-col gap-8">
+          <p class="font-mono text-dim text-lg leading-[28px] max-w-2xl">${esc(hero.summary || '')}</p>
+          <a href="${esc(hero.url)}" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-6 bg-cream text-[#516700] font-mono font-bold text-xs uppercase tracking-[2px] px-8 py-4 w-fit hover:bg-lime transition-colors">
+            ${ctaLabel(hero)} <span class="text-sm">→</span>
+          </a>
+        </div>
+
+        ${insightsHtml}
+      </section>`;
+  }
+
+  function renderSpotlight(items) {
+    if (!items.length) return '';
+
+    const cards = items.map((item, idx) => {
+      const tags = parseTags(item.tags);
+      const num  = String(item.position || (idx + 1)).padStart(3, '0');
+      const tagPills = tags.map(t =>
+        `<span class="font-mono text-muted text-[9px] uppercase border border-border px-2 py-1">${esc(t)}</span>`
+      ).join('');
+
+      return `
+        <article class="article-card bg-panel border border-border p-8 flex flex-col gap-6">
+          <div class="flex items-start justify-between">
+            <div class="flex gap-2 flex-wrap">${tagPills}</div>
+            <span class="font-mono text-muted text-[9px] shrink-0 ml-4">${esc(num)}</span>
+          </div>
+          <h2 class="font-display font-bold text-white uppercase leading-none tracking-tight"
+              style="font-size:clamp(32px,3.5vw,48px); letter-spacing:-1.2px; line-height:1.05;">
+            ${esc(item.title)}
+          </h2>
+          <a href="${esc(item.url)}" target="_blank" rel="noopener"
+             class="read-link flex items-center gap-4 font-mono text-cream text-[11px] uppercase tracking-[2px] pt-2 w-fit">
+            ${ctaLabel(item)} <span class="text-sm">→</span>
+          </a>
+        </article>`;
+    }).join('');
+
+    return `
+      <section data-section="spotlight">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-1.5 h-1.5 bg-cream"></div>
+          <span class="font-mono text-cream text-[10px] uppercase tracking-[1px]">Spotlight Articles</span>
+        </div>
+        <div class="flex flex-col gap-6">${cards}</div>
+      </section>`;
+  }
+
+  function renderVisualInspo(items) {
+    if (!items.length) return '';
+
+    const cards = items.map(item => {
+      const name  = item.source_name || item.title || 'Visual';
+      const badge = abbrev(name);
+      const img   = thumbUrl(item);
+
+      return `
+        <div class="bg-panel border border-border overflow-hidden">
+          <div class="bg-black border-b border-white/10 flex items-center justify-between px-6 py-5">
+            <span class="font-display font-bold text-white text-2xl uppercase tracking-tight">${esc(name)}</span>
+            <span class="bg-cream text-[#516700] font-mono font-bold text-[10px] tracking-[1px] uppercase px-3 py-1">${esc(badge)}</span>
+          </div>
+          ${img ? `<img src="${esc(img)}" alt="${esc(name)}"
+               class="img-gray w-full h-[280px] object-cover block" />` : ''}
+        </div>`;
+    }).join('');
+
+    return `
+      <section data-section="visual-inspo" class="pb-24">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-1.5 h-1.5 bg-cream"></div>
+          <span class="font-mono text-cream text-[10px] uppercase tracking-[1px]">Visual Inspo</span>
+        </div>
+        <div class="flex flex-col gap-6">${cards}</div>
+      </section>`;
+  }
+
+  function renderThumbs(items) {
+    // Show all items that have a usable image, in position order
+    const thumbItems = items.filter(i => i.thumbnail_url || i.url);
+    if (!thumbItems.length) {
+      document.getElementById('sidebar-thumbs').innerHTML = '';
+      return;
+    }
+
+    // Section → label prefix mapping
+    const prefixMap = { 'hero': 'HERO', 'spotlight': 'SPOT', 'visual-inspo': 'INSP' };
+    const counters  = {};
+
+    const thumbsHtml = thumbItems.map(item => {
+      const prefix  = prefixMap[item.section] || 'ITEM';
+      counters[prefix] = (counters[prefix] || 0) + 1;
+      const label   = `${prefix}_${String(counters[prefix]).padStart(2, '0')}`;
+      const img     = thumbUrl(item);
+
+      return `
+        <div class="bg-mid border border-border relative overflow-hidden">
+          ${img ? `<img src="${esc(img)}" alt="${esc(item.title)}"
+               class="img-gray w-full h-[120px] object-cover block" />` : ''}
+          <span class="absolute bottom-2 left-2 bg-mid text-white font-mono font-bold text-[8px] px-1">${esc(label)}</span>
+        </div>`;
+    }).join('');
+
+    document.getElementById('sidebar-thumbs').innerHTML = thumbsHtml;
+  }
+
+  // ─── Main init ─────────────────────────────────────────────────────────
+  async function init() {
+    try {
+      // 1. Fetch all issue + created_at rows to build the timeline
+      const allRows = await dbQuery({
+        select: 'issue,created_at',
+        order:  'issue.desc',
+      });
+
+      // Deduplicate: keep the first (earliest) created_at per issue number
+      const seen     = new Set();
+      const allIssues = [];
+      for (const row of allRows) {
+        if (!seen.has(row.issue)) {
+          seen.add(row.issue);
+          allIssues.push({ issue: Number(row.issue), created_at: row.created_at });
+        }
+      }
+      allIssues.sort((a, b) => b.issue - a.issue);
+
+      if (!allIssues.length) {
+        document.getElementById('main-content').innerHTML =
+          `<div class="font-mono text-muted text-sm py-12 text-center">
+             No issues published yet. Run the pipeline to generate the first issue.
+           </div>`;
+        document.getElementById('sidebar-date').innerHTML    = '—';
+        document.getElementById('sidebar-tools').innerHTML   = '<span class="font-mono text-muted text-[10px] uppercase tracking-wide">Tools Featured</span><div class="font-mono text-muted text-sm mt-1">—</div>';
+        document.getElementById('sidebar-timeline').innerHTML = '';
+        document.getElementById('sidebar-thumbs').innerHTML  = '';
+        return;
+      }
+
+      const latestIssue = allIssues[0].issue;
+
+      // 2. Fetch all items for the latest issue, ordered by position
+      const items = await dbQuery({
+        select: '*',
+        issue:  `eq.${latestIssue}`,
+        order:  'position.asc,created_at.asc',
+      });
+
+      if (!items.length) {
+        document.getElementById('main-content').innerHTML =
+          `<div class="font-mono text-muted text-sm py-12 text-center">
+             Issue #${padIssue(latestIssue)} has no content yet.
+           </div>`;
+        return;
+      }
+
+      // 3. Split items by section
+      const hero      = items.find(i => i.section === 'hero') || null;
+      const spotlight = items.filter(i => i.section === 'spotlight');
+      const inspo     = items.filter(i => i.section === 'visual-inspo');
+
+      // 4. Render all regions
+      renderSidebar(items, allIssues, latestIssue);
+
+      document.getElementById('main-content').innerHTML =
+        renderHero(hero) +
+        renderSpotlight(spotlight) +
+        renderVisualInspo(inspo);
+
+      renderThumbs(items);
+
+      // 5. Update header + footer
+      document.getElementById('header-issue').textContent =
+        `Issue #${padIssue(latestIssue)}`;
+
+      const anchor = hero || items[0];
+      if (anchor) {
+        const { day, month, year } = parseDate(anchor.created_at);
+        document.getElementById('footer-text').textContent =
+          `Design \u00d7 AI Digest \u2014 Issue #${padIssue(latestIssue)} \u2014 ${day} ${month} ${year}`;
+      }
+
+    } catch (err) {
+      console.error('[DDD]', err);
+      document.getElementById('main-content').innerHTML =
+        `<div class="font-mono text-sm flex flex-col gap-3 py-12">
+           <span class="text-cream uppercase tracking-wide">Failed to load content</span>
+           <span class="text-muted">${esc(err.message)}</span>
+         </div>`;
+    }
+  }
+
+  init();
+</script>
 
 </body>
 </html>
